@@ -11,20 +11,13 @@ function Get-Usage {
     Write-Output "  run [args]     Run the compiled code"
 }
 
-function Get-Tail {
-    param (
-        [Parameter(Mandatory=$false, Position=0)]
-        [string[]]$Args
-    )
-    $Args | Format-List | Select-Object -Skip 1
-}
-
 If ($Args.Count -lt 1) {
     Get-Usage
     return
 }
 
-$Tail = Get-Tail $Args | Out-String
+$Tail = $Args[1..($Args.Count - 1)]
+$Tail = $Tail -join " "
 
 switch ($Args[0].ToLower()) {
     "antlr4" { "java -jar ./dependencies/antlr-4.13.0-complete.jar " + $Tail | Invoke-Expression }

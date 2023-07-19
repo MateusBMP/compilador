@@ -14,13 +14,12 @@ public class App {
       return;
     }
 
-    if (args[args.length - 1].equals("gui")) {
+    if (args[0].equals("gui")) {
       // Get the second and subsequently arguments
       List<String> listArgs = Arrays.stream(args).collect(Collectors.toList());
-      Collections.reverse(listArgs); // Reverse the list
       List<String> newArgs = listArgs.subList(1, listArgs.size());
       gui(newArgs);
-    } else if (args[args.length - 1].equals("tree")) {
+    } else if (args[0].equals("tree")) {
       tree();
     } else {
       System.out.println("Error: Invalid command");
