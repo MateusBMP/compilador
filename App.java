@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +34,7 @@ public class App {
    * @see https://www.antlr.org/api/Java/org/antlr/v4/gui/TestRig.html
    */
   static void gui(List<String> args) {
-    String[] fakeArgs = { "ArrayInit", "init", "-gui" };
+    String[] fakeArgs = { "Expr", "expr", "-gui" };
     List<String> listArgs = Arrays
       .stream(fakeArgs)
       .collect(Collectors.toList());
@@ -59,15 +58,15 @@ public class App {
       CharStream input = CharStreams.fromStream(System.in);
 
       // create a lexer that feeds off of input CharStream
-      ArrayInitLexer lexer = new ArrayInitLexer(input);
+      ExprLexer lexer = new ExprLexer(input);
 
       // create a buffer of tokens pulled from the lexer
       CommonTokenStream tokens = new CommonTokenStream(lexer);
 
       // create a parser that feeds off the tokens buffer
-      ArrayInitParser parser = new ArrayInitParser(tokens);
+      ExprParser parser = new ExprParser(tokens);
 
-      ParseTree tree = parser.init(); // begin parsing at init rule
+      ParseTree tree = parser.expr(); // begin parsing at expr rule
       System.out.println(tree.toStringTree(parser)); // print LISP-style tree
     } catch (Exception e) {
       System.out.println("Error: " + e.getMessage());
