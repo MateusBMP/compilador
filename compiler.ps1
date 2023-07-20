@@ -21,7 +21,7 @@ $Tail = $Tail -join " "
 
 switch ($Args[0].ToLower()) {
     "antlr4" { "java -jar ./dependencies/antlr-4.13.0-complete.jar " + $Tail | Invoke-Expression }
-    "compile" { javac -cp ".;./dependencies/antlr-4.13.0-complete.jar" -d ".target/" *.java }
+    "compile" { javac -Xlint:deprecation -cp ".;./dependencies/antlr-4.13.0-complete.jar" -d ".target/" *.java }
     "run" { "java -cp `".target/;./dependencies/antlr-4.13.0-complete.jar`" App " + $Tail | Invoke-Expression }
     Default { Get-Usage }
 }

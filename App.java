@@ -1,3 +1,5 @@
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -14,13 +16,16 @@ public class App {
       return;
     }
 
+    // Get the second and subsequently arguments
+    List<String> listArgs = Arrays.stream(args).collect(Collectors.toList());
+    List<String> newArgs = listArgs.subList(1, listArgs.size());
+
     if (args[0].equals("gui")) {
-      // Get the second and subsequently arguments
-      List<String> listArgs = Arrays.stream(args).collect(Collectors.toList());
-      List<String> newArgs = listArgs.subList(1, listArgs.size());
       gui(newArgs);
     } else if (args[0].equals("tree")) {
-      tree();
+      tree(newArgs);
+    } else if (args[0].equals("eval")) {
+      eval(newArgs);
     } else {
       System.out.println("Error: Invalid command");
       seeCommands();
@@ -33,7 +38,7 @@ public class App {
    * @see https://www.antlr.org/api/Java/org/antlr/v4/gui/TestRig.html
    */
   static void gui(List<String> args) {
-    String[] fakeArgs = { "Expr", "expr", "-gui" };
+    String[] fakeArgs = { "Nelang", "nelang", "-gui" };
     List<String> listArgs = Arrays
       .stream(fakeArgs)
       .collect(Collectors.toList());
@@ -51,30 +56,85 @@ public class App {
    * Run the tree walker. If the input is valid, it will print the tree in LISP-style. Else,
    * it will print the syntax error.
    */
-  static void tree() {
+  static void tree(List<String> args) {
+    InputStream is = getInputStream(args);
+
     try {
-      // create a CharStream that reads from standard input
-      CharStream input = CharStreams.fromStream(System.in);
+      // Create a CharStream that reads from standard input or from a file
+      CharStream input = CharStreams.fromStream(is);
 
       // create a lexer that feeds off of input CharStream
-      ExprLexer lexer = new ExprLexer(input);
+      NelangLexer lexer = new NelangLexer(input);
 
       // create a buffer of tokens pulled from the lexer
       CommonTokenStream tokens = new CommonTokenStream(lexer);
 
       // create a parser that feeds off the tokens buffer
-      ExprParser parser = new ExprParser(tokens);
+      NelangParser parser = new NelangParser(tokens);
+      ParseTree tree = parser.nelang(); // begin parsing at nelang rule
 
-      ParseTree tree = parser.expr(); // begin parsing at expr rule
+      // Create a generic parse tree walker that can trigger callbacks
+      ParseTreeWalker walker = new ParseTreeWalker();
+      // Walk the tree created during the parse, trigger callbacks
+      walker.walk(new CheckSemantic(), tree);
+
       System.out.println(tree.toStringTree(parser)); // print LISP-style tree
     } catch (Exception e) {
       System.out.println("Error: " + e.getMessage());
     }
   }
 
+  /**
+   * Run the interpreter.
+   */
+  static void eval(List<String> args) {
+    InputStream is = getInputStream(args);
+
+    try {
+      // Create a CharStream that reads from standard input or from a file
+      CharStream input = CharStreams.fromStream(is);
+
+      // create a lexer that feeds off of input CharStream
+      NelangLexer lexer = new NelangLexer(input);
+
+      // create a buffer of tokens pulled from the lexer
+      CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+      // create a parser that feeds off the tokens buffer
+      NelangParser parser = new NelangParser(tokens);
+      ParseTree tree = parser.nelang(); // begin parsing at nelang rule
+
+      EvalVisitor eval = new EvalVisitor();
+      eval.visit(tree);
+    } catch (Exception e) {
+      System.out.println("Error: " + e.getMessage());
+    }
+  }
+
+  static InputStream getInputStream(List<String> args) {
+    String inputFile = null;
+
+    if (args.size() > 0) {
+      inputFile = args.get(0);
+    }
+
+    InputStream is = System.in;
+
+    if (inputFile != null) {
+      try {
+        is = new FileInputStream(inputFile);
+      } catch (Exception e) {
+        System.out.println("Error: " + e.getMessage());
+      }
+    }
+
+    return is;
+  }
+
   static void seeCommands() {
     System.out.println("Commands:");
     System.out.println("  gui [args] - Run the TestRig GUI");
     System.out.println("  tree - Run the tree walker");
+    System.out.println("  eval - Run the interpreter");
   }
 }
