@@ -1,8 +1,3 @@
-# Create the target directory if it doesn't exist
-if (-Not (Test-Path ".target/")) {
-    New-Item -ItemType Directory -Force -Path ".target/" | Out-Null
-}
-
 function Get-Usage {
     Write-Output "Usage: ./compiler.ps1 [command] [args]"
     Write-Output "Commands:"
@@ -54,13 +49,22 @@ if ($args.Count -gt 1) {
 
 switch ($Args[0].ToLower()) {
     "antlr4" { "java -jar ./dependencies/antlr-4.13.0-complete.jar " + $Tail | Invoke-Expression }
-    "compile" { "javac -Xlint:deprecation -cp `"" + (Get-Compiler-Classpath) + "`" -d `".target/`" " + (Get-Compiler-Java-Files) | Invoke-Expression }
-    "run" { "java -cp `".target/;./dependencies/antlr-4.13.0-complete.jar`" compiler.App " + $Tail | Invoke-Expression }
+    "compile" {
+        if (Test-Path ".target/") {
+            Remove-Item -Recurse -Force -Path ".target/" | Out-Null
+        }
+        New-Item -ItemType Directory -Force -Path ".target/" | Out-Null
+        "javac -Xlint:deprecation -cp `"" + (Get-Compiler-Classpath) + "`" -d `".target/`" " + (Get-Compiler-Java-Files) | Invoke-Expression
+    }
+    "run" {
+        if (-Not (Test-Path ".target/")) {
+            Write-Output "Please compile the code first with `".\compiler.ps1 compile`""
+            return
+        }
+        "java -cp `".target/;./dependencies/antlr-4.13.0-complete.jar`" compiler.App " + $Tail | Invoke-Expression
+    }
     "update-grammar" {
         java -jar "./dependencies/antlr-4.13.0-complete.jar" -o "./src/compiler/nelang/antlr" -package compiler.nelang.antlr -listener -visitor "./src/compiler/nelang/Nelang.g4"
-    }
-    "get-classpath" {
-        Get-Compiler-Java-Files
     }
     Default { Get-Usage }
 }
