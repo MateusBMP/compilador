@@ -17,17 +17,23 @@ public interface NelangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNelang(NelangParser.NelangContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link NelangParser#initNLG}.
+	 * Visit a parse tree produced by {@link NelangParser#label}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitInitNLG(NelangParser.InitNLGContext ctx);
+	T visitLabel(NelangParser.LabelContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link NelangParser#endNLG}.
+	 * Visit a parse tree produced by {@link NelangParser#initLabel}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitEndNLG(NelangParser.EndNLGContext ctx);
+	T visitInitLabel(NelangParser.InitLabelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link NelangParser#endLabel}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEndLabel(NelangParser.EndLabelContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link NelangParser#statement}.
 	 * @param ctx the parse tree
@@ -35,11 +41,11 @@ public interface NelangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(NelangParser.StatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link NelangParser#endStatement}.
+	 * Visit a parse tree produced by {@link NelangParser#endLine}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitEndStatement(NelangParser.EndStatementContext ctx);
+	T visitEndLine(NelangParser.EndLineContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link NelangParser#declaration}.
 	 * @param ctx the parse tree

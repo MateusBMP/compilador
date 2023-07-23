@@ -18,25 +18,35 @@ public interface NelangListener extends ParseTreeListener {
 	 */
 	void exitNelang(NelangParser.NelangContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link NelangParser#initNLG}.
+	 * Enter a parse tree produced by {@link NelangParser#label}.
 	 * @param ctx the parse tree
 	 */
-	void enterInitNLG(NelangParser.InitNLGContext ctx);
+	void enterLabel(NelangParser.LabelContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link NelangParser#initNLG}.
+	 * Exit a parse tree produced by {@link NelangParser#label}.
 	 * @param ctx the parse tree
 	 */
-	void exitInitNLG(NelangParser.InitNLGContext ctx);
+	void exitLabel(NelangParser.LabelContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link NelangParser#endNLG}.
+	 * Enter a parse tree produced by {@link NelangParser#initLabel}.
 	 * @param ctx the parse tree
 	 */
-	void enterEndNLG(NelangParser.EndNLGContext ctx);
+	void enterInitLabel(NelangParser.InitLabelContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link NelangParser#endNLG}.
+	 * Exit a parse tree produced by {@link NelangParser#initLabel}.
 	 * @param ctx the parse tree
 	 */
-	void exitEndNLG(NelangParser.EndNLGContext ctx);
+	void exitInitLabel(NelangParser.InitLabelContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link NelangParser#endLabel}.
+	 * @param ctx the parse tree
+	 */
+	void enterEndLabel(NelangParser.EndLabelContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NelangParser#endLabel}.
+	 * @param ctx the parse tree
+	 */
+	void exitEndLabel(NelangParser.EndLabelContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link NelangParser#statement}.
 	 * @param ctx the parse tree
@@ -48,15 +58,15 @@ public interface NelangListener extends ParseTreeListener {
 	 */
 	void exitStatement(NelangParser.StatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link NelangParser#endStatement}.
+	 * Enter a parse tree produced by {@link NelangParser#endLine}.
 	 * @param ctx the parse tree
 	 */
-	void enterEndStatement(NelangParser.EndStatementContext ctx);
+	void enterEndLine(NelangParser.EndLineContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link NelangParser#endStatement}.
+	 * Exit a parse tree produced by {@link NelangParser#endLine}.
 	 * @param ctx the parse tree
 	 */
-	void exitEndStatement(NelangParser.EndStatementContext ctx);
+	void exitEndLine(NelangParser.EndLineContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link NelangParser#declaration}.
 	 * @param ctx the parse tree

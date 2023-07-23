@@ -4,20 +4,22 @@ grammar Nelang;
  * Parser Rules
  */
 
-nelang: initNLG statement* endNLG ;
+nelang: label* EOF ;
 
-initNLG: 'INIT NLG' endStatement ;
-endNLG: 'END NLG' (endStatement | EOF) ;
+label: initLabel statement* endLabel ;
 
-statement: declaration endStatement
-         | assignment endStatement
-         | sum endStatement
-         | minus endStatement
-         | multiply endStatement
-         | divide endStatement
-         | print endStatement ;
+initLabel: INIT SPACE+ IDENTIFIER endLine ;
+endLabel: END SPACE+ IDENTIFIER (endLine | EOF) ;
 
-endStatement: SPACE* NEWLINE;
+statement: declaration endLine
+         | assignment endLine
+         | sum endLine
+         | minus endLine
+         | multiply endLine
+         | divide endLine
+         | print endLine ;
+
+endLine: SPACE* NEWLINE;
 
 declaration: DECLARE SPACE+ IDENTIFIER ;
 assignment: ASSIGN SPACE+ IDENTIFIER SPACE+ valuePosition ;
@@ -36,13 +38,15 @@ integerAsValue: INTEGER ;
  * Lexer Rules
  */
 
-DECLARE: 'DECLARE';
 ASSIGN: 'ASSIGN';
-SUM: 'SUM';
+DECLARE: 'DECLARE';
+DIVIDE: 'DIVIDE';
+END: 'END';
+INIT: 'INIT';
 MINUS: 'MINUS';
 MULTIPLY: 'MULTIPLY';
-DIVIDE: 'DIVIDE';
 PRINT: 'PRINT';
+SUM: 'SUM';
 
 INTEGER: ('+' | '-')? [0-9]+;
 IDENTIFIER: [a-z]+;

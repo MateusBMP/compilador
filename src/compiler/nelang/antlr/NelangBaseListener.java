@@ -29,25 +29,37 @@ public class NelangBaseListener implements NelangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInitNLG(NelangParser.InitNLGContext ctx) { }
+	@Override public void enterLabel(NelangParser.LabelContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInitNLG(NelangParser.InitNLGContext ctx) { }
+	@Override public void exitLabel(NelangParser.LabelContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEndNLG(NelangParser.EndNLGContext ctx) { }
+	@Override public void enterInitLabel(NelangParser.InitLabelContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEndNLG(NelangParser.EndNLGContext ctx) { }
+	@Override public void exitInitLabel(NelangParser.InitLabelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEndLabel(NelangParser.EndLabelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEndLabel(NelangParser.EndLabelContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -65,13 +77,13 @@ public class NelangBaseListener implements NelangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEndStatement(NelangParser.EndStatementContext ctx) { }
+	@Override public void enterEndLine(NelangParser.EndLineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEndStatement(NelangParser.EndStatementContext ctx) { }
+	@Override public void exitEndLine(NelangParser.EndLineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
