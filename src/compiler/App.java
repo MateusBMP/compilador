@@ -107,6 +107,10 @@ public class App {
 
       // create a parser that feeds off the tokens buffer
       NelangParser parser = new NelangParser(tokens);
+
+      // begin parsing at init rule
+      parser.addParseListener(new CheckSemantic());
+
       ParseTree tree = parser.nelang(); // begin parsing at nelang rule
 
       EvalVisitor eval = new EvalVisitor();
