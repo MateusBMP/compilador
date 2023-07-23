@@ -1,4 +1,5 @@
-// Generated from Nelang.g4 by ANTLR 4.13.0
+// Generated from ./src/compiler/nelang/Nelang.g4 by ANTLR 4.13.0
+package compiler.nelang.antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -119,6 +120,30 @@ public class NelangBaseListener implements NelangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMinus(NelangParser.MinusContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultiply(NelangParser.MultiplyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultiply(NelangParser.MultiplyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDivide(NelangParser.DivideContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDivide(NelangParser.DivideContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

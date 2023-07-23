@@ -1,4 +1,5 @@
-// Generated from Nelang.g4 by ANTLR 4.13.0
+// Generated from ./src/compiler/nelang/Nelang.g4 by ANTLR 4.13.0
+package compiler.nelang.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -96,6 +97,26 @@ public interface NelangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMinus(NelangParser.MinusContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link NelangParser#multiply}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiply(NelangParser.MultiplyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NelangParser#multiply}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiply(NelangParser.MultiplyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link NelangParser#divide}.
+	 * @param ctx the parse tree
+	 */
+	void enterDivide(NelangParser.DivideContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NelangParser#divide}.
+	 * @param ctx the parse tree
+	 */
+	void exitDivide(NelangParser.DivideContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link NelangParser#print}.
 	 * @param ctx the parse tree

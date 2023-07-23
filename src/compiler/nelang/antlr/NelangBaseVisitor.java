@@ -1,4 +1,5 @@
-// Generated from Nelang.g4 by ANTLR 4.13.0
+// Generated from ./src/compiler/nelang/Nelang.g4 by ANTLR 4.13.0
+package compiler.nelang.antlr;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -74,6 +75,20 @@ public class NelangBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitMinus(NelangParser.MinusContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitMultiply(NelangParser.MultiplyContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDivide(NelangParser.DivideContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

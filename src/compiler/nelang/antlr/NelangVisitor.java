@@ -1,4 +1,5 @@
-// Generated from Nelang.g4 by ANTLR 4.13.0
+// Generated from ./src/compiler/nelang/Nelang.g4 by ANTLR 4.13.0
+package compiler.nelang.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -63,6 +64,18 @@ public interface NelangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMinus(NelangParser.MinusContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link NelangParser#multiply}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultiply(NelangParser.MultiplyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link NelangParser#divide}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDivide(NelangParser.DivideContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link NelangParser#print}.
 	 * @param ctx the parse tree

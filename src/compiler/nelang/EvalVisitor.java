@@ -1,3 +1,7 @@
+package compiler.nelang;
+
+import compiler.nelang.antlr.NelangBaseVisitor;
+import compiler.nelang.antlr.NelangParser;
 import java.util.HashMap;
 import java.util.Map;
 

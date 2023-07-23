@@ -1,3 +1,9 @@
+package compiler;
+
+import compiler.nelang.antlr.NelangLexer;
+import compiler.nelang.antlr.NelangParser;
+import compiler.nelang.CheckSemantic;
+import compiler.nelang.EvalVisitor;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
