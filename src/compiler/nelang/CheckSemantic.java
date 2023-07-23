@@ -16,7 +16,7 @@ public class CheckSemantic extends NelangBaseListener {
     @Override
     public void exitNelang(NelangParser.NelangContext ctx) {
         if (!labels.containsKey("nlg")) {
-            System.out.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+            System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
                     + " Label nlg not declared");
         }
     }
@@ -29,7 +29,7 @@ public class CheckSemantic extends NelangBaseListener {
             labels.put(id, label);
             this.currentLabel = (Label) label;
         } else {
-            System.out.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+            System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
                     + " Label " + id + " already declared");
         }
     }
@@ -38,7 +38,7 @@ public class CheckSemantic extends NelangBaseListener {
     public void exitEndLabel(NelangParser.EndLabelContext ctx) {
         String id = ctx.IDENTIFIER().getText();
         if (!labels.containsKey(id)) {
-            System.out.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+            System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
                     + " Label " + id + " not declared");
         }
         this.currentLabel = null;
@@ -51,7 +51,7 @@ public class CheckSemantic extends NelangBaseListener {
             Variable variable = new Variable(id);
             this.currentLabel.addVariable(variable);
         } else {
-            System.out.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+            System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
                     + " Variable " + id + " already declared in the label " + this.currentLabel.name());
         }
     }
@@ -60,7 +60,7 @@ public class CheckSemantic extends NelangBaseListener {
     public void exitAssignment(NelangParser.AssignmentContext ctx) {
         String id = ctx.IDENTIFIER().getText();
         if (!this.currentLabel.variables().containsKey(id)) {
-            System.out.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+            System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
                     + " Variable " + id + " not declared in the label " + this.currentLabel.name());
         }
     }
@@ -69,7 +69,7 @@ public class CheckSemantic extends NelangBaseListener {
     public void exitIdentifierAsValue(NelangParser.IdentifierAsValueContext ctx) {
         String id = ctx.IDENTIFIER().getText();
         if (!this.currentLabel.variables().containsKey(id)) {
-            System.out.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+            System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
                     + " Variable " + id + " not declared in the label " + this.currentLabel.name());
         }
     }

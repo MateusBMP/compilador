@@ -77,12 +77,11 @@ public class App {
 
       // create a parser that feeds off the tokens buffer
       NelangParser parser = new NelangParser(tokens);
-      ParseTree tree = parser.nelang(); // begin parsing at nelang rule
 
-      // Create a generic parse tree walker that can trigger callbacks
-      ParseTreeWalker walker = new ParseTreeWalker();
-      // Walk the tree created during the parse, trigger callbacks
-      walker.walk(new CheckSemantic(), tree);
+      // begin parsing at init rule
+      parser.addParseListener(new CheckSemantic());
+
+      ParseTree tree = parser.nelang(); // begin parsing at nelang rule
 
       System.out.println(tree.toStringTree(parser)); // print LISP-style tree
     } catch (Exception e) {
