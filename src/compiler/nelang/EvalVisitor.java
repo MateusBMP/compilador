@@ -2,22 +2,27 @@ package compiler.nelang;
 
 import compiler.nelang.antlr.NelangBaseVisitor;
 import compiler.nelang.antlr.NelangParser;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import org.antlr.v4.runtime.tree.*;
 
 @SuppressWarnings("CheckReturnValue")
 public class EvalVisitor extends NelangBaseVisitor {
+
+    ParseTree tree;
 
     // Memory
     Label focusedLabel = null;
     Label currentLabel = null;
 
-    public EvalVisitor() {
-        this("nlg");
+    public EvalVisitor(ParseTree tree) {
+        this("nlg", tree);
     }
 
-    public EvalVisitor(String label) {
+    public EvalVisitor(String label, ParseTree tree) {
         this.focusedLabel = new Label(label);
+        this.tree = tree;
     }
 
     public Object visitLabel(NelangParser.LabelContext ctx) {
@@ -70,11 +75,38 @@ public class EvalVisitor extends NelangBaseVisitor {
         return newVariable;
     }
 
+    public Variable visitMultiply(NelangParser.MultiplyContext ctx) {
+        String id = ctx.IDENTIFIER().getText();
+        Variable variable = (Variable) this.focusedLabel.variables().get(id);
+        Integer toMultiply = (Integer) visit(ctx.valuePosition());
+        Integer newValue = variable.value() * toMultiply;
+        Variable newVariable = new Variable(id, newValue);
+        this.focusedLabel.addVariable(newVariable);
+        return newVariable;
+    }
+
+    public Variable visitDivide(NelangParser.DivideContext ctx) {
+        String id = ctx.IDENTIFIER().getText();
+        Variable variable = (Variable) this.focusedLabel.variables().get(id);
+        Integer toDivide = (Integer) visit(ctx.valuePosition());
+        Integer newValue = variable.value() / toDivide;
+        Variable newVariable = new Variable(id, newValue);
+        this.focusedLabel.addVariable(newVariable);
+        return newVariable;
+    }
+
     public Variable visitPrint(NelangParser.PrintContext ctx) {
         String id = ctx.IDENTIFIER().getText();
         Variable variable = (Variable) this.focusedLabel.variables().get(id);
         System.out.println(variable);
         return variable;
+    }
+
+    public Object visitGoto(NelangParser.GotoContext ctx) {
+        String id = ctx.IDENTIFIER().getText();
+        EvalVisitor visitor = new EvalVisitor(id, this.tree);
+        visitor.visit(this.tree);
+        return null;
     }
 
     public Integer visitIdentifierAsValue(NelangParser.IdentifierAsValueContext ctx) {

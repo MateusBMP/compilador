@@ -1,13 +1,11 @@
 package compiler;
 
-import compiler.nelang.antlr.NelangLexer;
 import compiler.nelang.antlr.NelangParser;
-import compiler.nelang.CheckSemantic;
 import compiler.nelang.EvalVisitor;
+import compiler.nelang.NelangHelper;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.gui.TestRig;
@@ -63,27 +61,11 @@ public class App {
    * it will print the syntax error.
    */
   static void tree(List<String> args) {
-    InputStream is = getInputStream(args);
-
     try {
-      // Create a CharStream that reads from standard input or from a file
-      CharStream input = CharStreams.fromStream(is);
-
-      // create a lexer that feeds off of input CharStream
-      NelangLexer lexer = new NelangLexer(input);
-
-      // create a buffer of tokens pulled from the lexer
-      CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-      // create a parser that feeds off the tokens buffer
-      NelangParser parser = new NelangParser(tokens);
-
-      // begin parsing at init rule
-      parser.addParseListener(new CheckSemantic());
-
-      ParseTree tree = parser.nelang(); // begin parsing at nelang rule
-
-      System.out.println(tree.toStringTree(parser)); // print LISP-style tree
+      InputStream is = getInputStream(args);
+      NelangParser parser = NelangHelper.getParser(is);
+      ParseTree tree = NelangHelper.getParseTree(parser);
+      System.out.println(tree.toStringTree(parser));
     } catch (Exception e) {
       System.out.println("Error: " + e.getMessage());
     }
@@ -93,34 +75,17 @@ public class App {
    * Run the interpreter.
    */
   static void eval(List<String> args) {
-    InputStream is = getInputStream(args);
-
     try {
-      // Create a CharStream that reads from standard input or from a file
-      CharStream input = CharStreams.fromStream(is);
-
-      // create a lexer that feeds off of input CharStream
-      NelangLexer lexer = new NelangLexer(input);
-
-      // create a buffer of tokens pulled from the lexer
-      CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-      // create a parser that feeds off the tokens buffer
-      NelangParser parser = new NelangParser(tokens);
-
-      // begin parsing at init rule
-      parser.addParseListener(new CheckSemantic());
-
-      ParseTree tree = parser.nelang(); // begin parsing at nelang rule
-
-      EvalVisitor eval = new EvalVisitor();
+      InputStream is = getInputStream(args);
+      ParseTree tree = NelangHelper.getParseTree(is);
+      EvalVisitor eval = new EvalVisitor(tree);
       eval.visit(tree);
     } catch (Exception e) {
       System.out.println("Error: " + e.getMessage());
     }
   }
 
-  static InputStream getInputStream(List<String> args) {
+  static InputStream getInputStream(List<String> args) throws Exception {
     String inputFile = null;
 
     if (args.size() > 0) {
@@ -130,11 +95,7 @@ public class App {
     InputStream is = System.in;
 
     if (inputFile != null) {
-      try {
-        is = new FileInputStream(inputFile);
-      } catch (Exception e) {
-        System.out.println("Error: " + e.getMessage());
-      }
+      is = new FileInputStream(inputFile);
     }
 
     return is;

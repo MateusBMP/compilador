@@ -138,6 +138,16 @@ public interface NelangListener extends ParseTreeListener {
 	 */
 	void exitPrint(NelangParser.PrintContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link NelangParser#goto}.
+	 * @param ctx the parse tree
+	 */
+	void enterGoto(NelangParser.GotoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NelangParser#goto}.
+	 * @param ctx the parse tree
+	 */
+	void exitGoto(NelangParser.GotoContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link NelangParser#valuePosition}.
 	 * @param ctx the parse tree
 	 */

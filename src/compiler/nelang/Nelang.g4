@@ -17,7 +17,8 @@ statement: declaration endLine
          | minus endLine
          | multiply endLine
          | divide endLine
-         | print endLine ;
+         | print endLine 
+         | goto endLine ;
 
 endLine: SPACE* NEWLINE;
 
@@ -28,6 +29,7 @@ minus: MINUS SPACE+ IDENTIFIER SPACE+ valuePosition ;
 multiply: MULTIPLY SPACE+ IDENTIFIER SPACE+ valuePosition ;
 divide: DIVIDE SPACE+ IDENTIFIER SPACE+ valuePosition ;
 print: PRINT SPACE+ IDENTIFIER ;
+goto: GOTO SPACE+ IDENTIFIER ;
 
 valuePosition: identifierAsValue | integerAsValue ;
 
@@ -38,17 +40,18 @@ integerAsValue: INTEGER ;
  * Lexer Rules
  */
 
-ASSIGN: 'ASSIGN';
-DECLARE: 'DECLARE';
-DIVIDE: 'DIVIDE';
-END: 'END';
-INIT: 'INIT';
-MINUS: 'MINUS';
-MULTIPLY: 'MULTIPLY';
-PRINT: 'PRINT';
-SUM: 'SUM';
+ASSIGN: 'ASSIGN' ;
+GOTO: 'GOTO' ;
+DECLARE: 'DECLARE' ;
+DIVIDE: 'DIVIDE' ;
+END: 'END' ;
+INIT: 'INIT' ;
+MINUS: 'MINUS' ;
+MULTIPLY: 'MULTIPLY' ;
+PRINT: 'PRINT' ;
+SUM: 'SUM' ;
 
-INTEGER: ('+' | '-')? [0-9]+;
-IDENTIFIER: [a-z]+;
-NEWLINE: '\r'? '\n';
-SPACE: ' ' | '\t';
+INTEGER: ('+' | '-')? [0-9]+ ;
+IDENTIFIER: [a-z]+ ;
+NEWLINE: '\r'? '\n' ;
+SPACE: ' ' | '\t' ;
