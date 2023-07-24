@@ -29,7 +29,7 @@ sum: SUM SPACE+ IDENTIFIER SPACE+ valuePosition ;
 minus: MINUS SPACE+ IDENTIFIER SPACE+ valuePosition ;
 multiply: MULTIPLY SPACE+ IDENTIFIER SPACE+ valuePosition ;
 divide: DIVIDE SPACE+ IDENTIFIER SPACE+ valuePosition ;
-print: PRINT SPACE+ IDENTIFIER ;
+print: PRINT (SPACE+ IDENTIFIER)* ;
 goto: GOTO SPACE+ IDENTIFIER ;
 if: IF SPACE+ compare SPACE+ goto (SPACE+ else)? ;
 else: ELSE SPACE+ goto ;

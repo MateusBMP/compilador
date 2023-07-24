@@ -98,11 +98,19 @@ public class EvalVisitor extends NelangBaseVisitor {
         return newVariable;
     }
 
-    public Variable visitPrint(NelangParser.PrintContext ctx) {
-        String id = ctx.IDENTIFIER().getText();
-        Variable variable = (Variable) this.currentLabel.variables().get(id);
-        System.out.println(variable);
-        return variable;
+    public Map<String, Variable> visitPrint(NelangParser.PrintContext ctx) {
+        List<TerminalNode> ids = ctx.IDENTIFIER();
+        Map<String, Variable> variables = new HashMap<String, Variable>();
+        if (ids.isEmpty()) {
+            System.out.println("");
+            return variables;
+        }
+        for (String id : ids.stream().map(TerminalNode::getText).toList()) {
+            Variable variable = (Variable) this.currentLabel.variables().get(id);
+            variables.put(id, variable);
+            System.out.println(variable);
+        }
+        return variables;
     }
 
     public Object visitGoto(NelangParser.GotoContext ctx) {

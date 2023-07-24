@@ -47,6 +47,17 @@ public class CheckSemantic extends NelangBaseListener {
     }
 
     @Override
+    public void exitPrint(NelangParser.PrintContext ctx) {
+        List<TerminalNode> ids = ctx.IDENTIFIER();
+        for (String id : ids.stream().map(TerminalNode::getText).toList()) {
+            if (!this.currentLabel.variables().containsKey(id)) {
+                System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+                        + " Variable " + id + " not declared in the label " + this.currentLabel.name());
+            }
+        }
+    }
+
+    @Override
     public void exitDeclaration(NelangParser.DeclarationContext ctx) {
         List<TerminalNode> ids = ctx.IDENTIFIER();
         for (String id : ids.stream().map(TerminalNode::getText).toList()) {
