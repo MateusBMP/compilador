@@ -6,20 +6,20 @@ grammar Nelang;
 
 nelang: label* EOF ;
 
-label: initLabel statement* endLabel ;
+label: SPACE* initLabel statement* endLabel ;
 
-initLabel: INIT SPACE+ IDENTIFIER endLine ;
-endLabel: END SPACE+ IDENTIFIER (endLine | EOF) ;
+initLabel: INIT SPACE+ IDENTIFIER endLine+ ;
+endLabel: END SPACE+ IDENTIFIER (endLine+ | EOF) ;
 
-statement: declaration endLine
-         | assignment endLine
-         | sum endLine
-         | minus endLine
-         | multiply endLine
-         | divide endLine
-         | print endLine 
-         | goto endLine 
-         | if endLine ;
+statement: SPACE* declaration endLine+
+         | SPACE* assignment endLine+
+         | SPACE* sum endLine+
+         | SPACE* minus endLine+
+         | SPACE* multiply endLine+
+         | SPACE* divide endLine+
+         | SPACE* print endLine+ 
+         | SPACE* goto endLine+ 
+         | SPACE* if endLine+ ;
 
 endLine: SPACE* NEWLINE;
 
