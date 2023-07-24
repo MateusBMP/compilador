@@ -18,7 +18,8 @@ statement: declaration endLine
          | multiply endLine
          | divide endLine
          | print endLine 
-         | goto endLine ;
+         | goto endLine 
+         | if endLine ;
 
 endLine: SPACE* NEWLINE;
 
@@ -30,7 +31,10 @@ multiply: MULTIPLY SPACE+ IDENTIFIER SPACE+ valuePosition ;
 divide: DIVIDE SPACE+ IDENTIFIER SPACE+ valuePosition ;
 print: PRINT SPACE+ IDENTIFIER ;
 goto: GOTO SPACE+ IDENTIFIER ;
+if: IF SPACE+ compare SPACE+ goto (SPACE+ else)? ;
+else: ELSE SPACE+ goto ;
 
+compare: valuePosition SPACE+ OPERATOR SPACE+ valuePosition ;
 valuePosition: identifierAsValue | integerAsValue ;
 
 identifierAsValue: IDENTIFIER ;
@@ -44,13 +48,17 @@ ASSIGN: 'ASSIGN' ;
 GOTO: 'GOTO' ;
 DECLARE: 'DECLARE' ;
 DIVIDE: 'DIVIDE' ;
+ELSE: 'ELSE' ;
 END: 'END' ;
+FI: 'FI' ;
+IF: 'IF' ;
 INIT: 'INIT' ;
 MINUS: 'MINUS' ;
 MULTIPLY: 'MULTIPLY' ;
 PRINT: 'PRINT' ;
 SUM: 'SUM' ;
 
+OPERATOR: 'EQ' | 'NE' | 'LT' | 'LE' | 'GT' | 'GE' ;
 INTEGER: ('+' | '-')? [0-9]+ ;
 IDENTIFIER: [a-z]+ ;
 NEWLINE: '\r'? '\n' ;

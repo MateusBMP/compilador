@@ -66,6 +66,15 @@ public class CheckSemantic extends NelangBaseListener {
     }
 
     @Override
+    public void exitGoto(NelangParser.GotoContext ctx) {
+        String id = ctx.IDENTIFIER().getText();
+        if (!labels.containsKey(id)) {
+            System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+                    + " Label " + id + " not declared");
+        }
+    }
+
+    @Override
     public void exitIdentifierAsValue(NelangParser.IdentifierAsValueContext ctx) {
         String id = ctx.IDENTIFIER().getText();
         if (!this.currentLabel.variables().containsKey(id)) {

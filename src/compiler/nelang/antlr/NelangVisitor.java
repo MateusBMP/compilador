@@ -95,6 +95,24 @@ public interface NelangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitGoto(NelangParser.GotoContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link NelangParser#if}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf(NelangParser.IfContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link NelangParser#else}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElse(NelangParser.ElseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link NelangParser#compare}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCompare(NelangParser.CompareContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link NelangParser#valuePosition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

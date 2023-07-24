@@ -109,6 +109,39 @@ public class EvalVisitor extends NelangBaseVisitor {
         return null;
     }
 
+    public Object visitIf(NelangParser.IfContext ctx) {
+        boolean result = (boolean) visit(ctx.compare());
+        boolean hasElse = ctx.else_() != null;
+        if (hasElse) {
+            if (result) {
+                visit(ctx.goto_());
+            } else {
+                visit(ctx.else_());
+            }
+        } else {
+            if (result) {
+                visit(ctx.goto_());
+            }
+        }
+        return null;
+    }
+
+    public Boolean visitCompare(NelangParser.CompareContext ctx) {
+        Integer firstValue = (Integer) visit(ctx.valuePosition(0));
+        Integer secondValue = (Integer) visit(ctx.valuePosition(1));
+        String operator = ctx.OPERATOR().getText();
+        Boolean result = switch(operator) {
+            case "EQ" -> firstValue == secondValue;
+            case "NE" -> firstValue != secondValue;
+            case "LT" -> firstValue < secondValue;
+            case "LE" -> firstValue <= secondValue;
+            case "GT" -> firstValue > secondValue;
+            case "GE" -> firstValue >= secondValue;
+            default -> false;
+        };
+        return result;
+    }
+
     public Integer visitIdentifierAsValue(NelangParser.IdentifierAsValueContext ctx) {
         String id = ctx.IDENTIFIER().getText();
         return (Integer) this.focusedLabel.variables().get(id).value();
