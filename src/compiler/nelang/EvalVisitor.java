@@ -4,6 +4,7 @@ import compiler.nelang.antlr.NelangBaseVisitor;
 import compiler.nelang.antlr.NelangParser;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.antlr.v4.runtime.tree.*;
 
@@ -40,64 +41,66 @@ public class EvalVisitor extends NelangBaseVisitor {
         return label;
     }
 
-    public Variable visitDeclaration(NelangParser.DeclarationContext ctx) {
-        String id = ctx.IDENTIFIER().getText();
-        Variable variable = new Variable(id);
-        this.focusedLabel.addVariable(variable);
-        return variable;
+    public Map<String, Variable> visitDeclaration(NelangParser.DeclarationContext ctx) {
+        List<TerminalNode> ids = ctx.IDENTIFIER();
+        for (String id : ids.stream().map(TerminalNode::getText).toList()) {
+            Variable variable = new Variable(id);
+            this.currentLabel.addVariable(variable);
+        }
+        return this.currentLabel.variables();
     }
 
     public Variable visitAssignment(NelangParser.AssignmentContext ctx) {
         String id = ctx.IDENTIFIER().getText();
         Integer value = (Integer) visit(ctx.valuePosition());
         Variable variable = new Variable(id, value);
-        this.focusedLabel.addVariable(variable);
+        this.currentLabel.addVariable(variable);
         return variable;
     }
 
     public Variable visitSum(NelangParser.SumContext ctx) {
         String id = ctx.IDENTIFIER().getText();
-        Variable variable = (Variable) this.focusedLabel.variables().get(id);
+        Variable variable = (Variable) this.currentLabel.variables().get(id);
         Integer toAdd = (Integer) visit(ctx.valuePosition());
         Integer newValue = variable.value() + toAdd;
         Variable newVariable = new Variable(id, newValue);
-        this.focusedLabel.addVariable(newVariable);
+        this.currentLabel.addVariable(newVariable);
         return newVariable;
     }
 
     public Variable visitMinus(NelangParser.MinusContext ctx) {
         String id = ctx.IDENTIFIER().getText();
-        Variable variable = (Variable) this.focusedLabel.variables().get(id);
+        Variable variable = (Variable) this.currentLabel.variables().get(id);
         Integer toSubtract = (Integer) visit(ctx.valuePosition());
         Integer newValue = variable.value() - toSubtract;
         Variable newVariable = new Variable(id, newValue);
-        this.focusedLabel.addVariable(newVariable);
+        this.currentLabel.addVariable(newVariable);
         return newVariable;
     }
 
     public Variable visitMultiply(NelangParser.MultiplyContext ctx) {
         String id = ctx.IDENTIFIER().getText();
-        Variable variable = (Variable) this.focusedLabel.variables().get(id);
+        Variable variable = (Variable) this.currentLabel.variables().get(id);
         Integer toMultiply = (Integer) visit(ctx.valuePosition());
         Integer newValue = variable.value() * toMultiply;
         Variable newVariable = new Variable(id, newValue);
-        this.focusedLabel.addVariable(newVariable);
+        this.currentLabel.addVariable(newVariable);
         return newVariable;
     }
 
     public Variable visitDivide(NelangParser.DivideContext ctx) {
         String id = ctx.IDENTIFIER().getText();
-        Variable variable = (Variable) this.focusedLabel.variables().get(id);
+        Variable variable = (Variable) this.currentLabel.variables().get(id);
         Integer toDivide = (Integer) visit(ctx.valuePosition());
         Integer newValue = variable.value() / toDivide;
         Variable newVariable = new Variable(id, newValue);
-        this.focusedLabel.addVariable(newVariable);
+        this.currentLabel.addVariable(newVariable);
         return newVariable;
     }
 
     public Variable visitPrint(NelangParser.PrintContext ctx) {
         String id = ctx.IDENTIFIER().getText();
-        Variable variable = (Variable) this.focusedLabel.variables().get(id);
+        Variable variable = (Variable) this.currentLabel.variables().get(id);
         System.out.println(variable);
         return variable;
     }
@@ -144,7 +147,7 @@ public class EvalVisitor extends NelangBaseVisitor {
 
     public Integer visitIdentifierAsValue(NelangParser.IdentifierAsValueContext ctx) {
         String id = ctx.IDENTIFIER().getText();
-        return (Integer) this.focusedLabel.variables().get(id).value();
+        return (Integer) this.currentLabel.variables().get(id).value();
     }
 
     public Integer visitIntegerAsValue(NelangParser.IntegerAsValueContext ctx) {

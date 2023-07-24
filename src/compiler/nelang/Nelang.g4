@@ -23,7 +23,7 @@ statement: declaration endLine
 
 endLine: SPACE* NEWLINE;
 
-declaration: DECLARE SPACE+ IDENTIFIER ;
+declaration: DECLARE (SPACE+ IDENTIFIER)+ ;
 assignment: ASSIGN SPACE+ IDENTIFIER SPACE+ valuePosition ;
 sum: SUM SPACE+ IDENTIFIER SPACE+ valuePosition ;
 minus: MINUS SPACE+ IDENTIFIER SPACE+ valuePosition ;

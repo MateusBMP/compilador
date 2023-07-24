@@ -3,9 +3,11 @@ package compiler.nelang;
 import compiler.nelang.antlr.NelangBaseListener;
 import compiler.nelang.antlr.NelangParser;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.*;
+import org.antlr.v4.runtime.tree.*;
 
 public class CheckSemantic extends NelangBaseListener {
 
@@ -46,13 +48,15 @@ public class CheckSemantic extends NelangBaseListener {
 
     @Override
     public void exitDeclaration(NelangParser.DeclarationContext ctx) {
-        String id = ctx.IDENTIFIER().getText();
-        if (!this.currentLabel.variables().containsKey(id)) {
-            Variable variable = new Variable(id);
-            this.currentLabel.addVariable(variable);
-        } else {
-            System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
-                    + " Variable " + id + " already declared in the label " + this.currentLabel.name());
+        List<TerminalNode> ids = ctx.IDENTIFIER();
+        for (String id : ids.stream().map(TerminalNode::getText).toList()) {
+            if (!this.currentLabel.variables().containsKey(id)) {
+                Variable variable = new Variable(id);
+                this.currentLabel.addVariable(variable);
+            } else {
+                System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+                        + " Variable " + id + " already declared in the label " + this.currentLabel.name());
+            }
         }
     }
 
