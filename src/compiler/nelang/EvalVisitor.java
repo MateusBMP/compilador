@@ -178,6 +178,15 @@ public class EvalVisitor extends NelangBaseVisitor {
         Stack<VisitorContext> stacktrace = this.pushStacktrace(ctx);
         EvalVisitor visitor = new EvalVisitor(id, this.tree, stacktrace);
         visitor.visit(this.tree);
+        // Update exported variables from the visited label
+        Map<String, Variable> exports = visitor.exports();
+        for (Variable variable : exports.values()) {
+            if (!this.exports.containsKey(variable.name())) {
+                continue; // The variable is not exported
+            }
+            this.exports.put(id, variable);
+            this.currentLabel.addVariable(variable);
+        }
         return null;
     }
 
