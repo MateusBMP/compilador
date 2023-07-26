@@ -54,7 +54,7 @@ switch ($Args[0].ToLower()) {
             Remove-Item -Recurse -Force -Path ".target/" | Out-Null
         }
         New-Item -ItemType Directory -Force -Path ".target/" | Out-Null
-        "javac -Xlint:deprecation -cp `"" + (Get-Compiler-Classpath) + "`" -d `".target/`" " + (Get-Compiler-Java-Files) | Invoke-Expression
+        "javac -Xlint:deprecation -Xlint:unchecked -cp `"" + (Get-Compiler-Classpath) + "`" -d `".target/`" " + (Get-Compiler-Java-Files) | Invoke-Expression
     }
     "run" {
         if (-Not (Test-Path ".target/")) {

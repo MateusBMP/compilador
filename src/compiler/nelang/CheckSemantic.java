@@ -14,12 +14,28 @@ public class CheckSemantic extends NelangBaseListener {
     // Memory
     Map<String, Label> labels = new HashMap<String, Label>();
     Label currentLabel = null;
+    Map<String, ParserRuleContext> expects = new HashMap<String, ParserRuleContext>();
+    Map<String, ParserRuleContext> exports = new HashMap<String, ParserRuleContext>();
 
     @Override
     public void exitNelang(NelangParser.NelangContext ctx) {
         if (!labels.containsKey("nlg")) {
             System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
                     + " Label nlg not declared");
+        }
+        for (String id : expects.keySet()) {
+            if (!exports.containsKey(id)) {
+                System.err.println("Line " + expects.get(id).getStart().getLine() + ":"
+                        + expects.get(id).getStart().getCharPositionInLine() + " [Warning] Variable " + id
+                        + " is expected but a export is missing");
+            }
+        }
+        for (String id : exports.keySet()) {
+            if (!expects.containsKey(id)) {
+                System.err.println("Line " + exports.get(id).getStart().getLine() + ":"
+                        + exports.get(id).getStart().getCharPositionInLine() + " [Warning] Variable " + id
+                        + " is exported but a expect is missing");
+            }
         }
     }
 
@@ -68,6 +84,26 @@ public class CheckSemantic extends NelangBaseListener {
                 System.err.println("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
                         + " Variable " + id + " already declared in the label " + this.currentLabel.name());
             }
+        }
+    }
+
+    @Override
+    public void exitExpect(NelangParser.ExpectContext ctx) {
+        List<TerminalNode> ids = ctx.IDENTIFIER();
+        for (String id : ids.stream().map(TerminalNode::getText).toList()) {
+            if (!this.currentLabel.variables().containsKey(id)) {
+                Variable variable = new Variable(id);
+                this.currentLabel.addVariable(variable);
+            }
+            expects.put(id, ctx);
+        }
+    }
+
+    @Override
+    public void exitExport(NelangParser.ExportContext ctx) {
+        List<TerminalNode> ids = ctx.IDENTIFIER();
+        for (String id : ids.stream().map(TerminalNode::getText).toList()) {
+            exports.put(id, ctx);
         }
     }
 

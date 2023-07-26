@@ -12,6 +12,8 @@ initLabel: INIT SPACE+ IDENTIFIER endLine+ ;
 endLabel: END SPACE+ IDENTIFIER (endLine+ | EOF) ;
 
 statement: SPACE* declaration endLine+
+         | SPACE* expect endLine+
+         | SPACE* export endLine+
          | SPACE* assignment endLine+
          | SPACE* sum endLine+
          | SPACE* minus endLine+
@@ -24,6 +26,8 @@ statement: SPACE* declaration endLine+
 endLine: SPACE* NEWLINE;
 
 declaration: DECLARE (SPACE+ IDENTIFIER)+ ;
+expect: EXPECT (SPACE+ IDENTIFIER)+ ;
+export: EXPORT (SPACE+ IDENTIFIER)+ ;
 assignment: ASSIGN SPACE+ IDENTIFIER SPACE+ valuePosition ;
 sum: SUM SPACE+ IDENTIFIER SPACE+ valuePosition ;
 minus: MINUS SPACE+ IDENTIFIER SPACE+ valuePosition ;
@@ -50,6 +54,8 @@ DECLARE: 'DECLARE' ;
 DIVIDE: 'DIVIDE' ;
 ELSE: 'ELSE' ;
 END: 'END' ;
+EXPECT: 'EXPECT' ;
+EXPORT: 'EXPORT' ;
 FI: 'FI' ;
 IF: 'IF' ;
 INIT: 'INIT' ;

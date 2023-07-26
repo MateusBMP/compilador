@@ -2,11 +2,14 @@ package compiler;
 
 import compiler.nelang.antlr.NelangParser;
 import compiler.nelang.EvalVisitor;
+import compiler.nelang.NelangException;
 import compiler.nelang.NelangHelper;
+import compiler.nelang.VisitorContext;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 import org.antlr.v4.gui.TestRig;
 import org.antlr.v4.runtime.*;
@@ -42,7 +45,7 @@ public class App {
    * @see https://www.antlr.org/api/Java/org/antlr/v4/gui/TestRig.html
    */
   static void gui(List<String> args) {
-    String[] fakeArgs = { "Nelang", "nelang", "-gui" };
+    String[] fakeArgs = { "compiler.nelang.antlr.Nelang", "nelang", "-gui" };
     List<String> listArgs = Arrays
       .stream(fakeArgs)
       .collect(Collectors.toList());
@@ -80,9 +83,17 @@ public class App {
       ParseTree tree = NelangHelper.getParseTree(is);
       EvalVisitor eval = new EvalVisitor(tree);
       eval.visit(tree);
+    } catch (NelangException e) {
+      Stack<VisitorContext> stacktrace = e.stacktrace();
+      System.out.println("Error: " + e.getMessage());
+      System.out.println("Stacktrace:");
+      while (!stacktrace.isEmpty()) {
+        VisitorContext visitorContext = stacktrace.pop();
+        System.out.println("  #" + stacktrace.size() + " : Label " + visitorContext.visitor().currentLabel().name()  + " Line " + visitorContext.context().getStart().getLine() + ":" + visitorContext.context().getStart().getCharPositionInLine());
+      }
     } catch (Exception e) {
       System.out.println("Error: " + e.getMessage());
-    }
+    } 
   }
 
   static InputStream getInputStream(List<String> args) throws Exception {

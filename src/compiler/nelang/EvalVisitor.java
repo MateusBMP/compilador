@@ -3,32 +3,58 @@ package compiler.nelang;
 import compiler.nelang.antlr.NelangBaseVisitor;
 import compiler.nelang.antlr.NelangParser;
 import java.io.InputStream;
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
 @SuppressWarnings("CheckReturnValue")
 public class EvalVisitor extends NelangBaseVisitor {
 
     ParseTree tree;
+    Stack<VisitorContext> stacktrace;
 
     // Memory
     Label focusedLabel = null;
     Label currentLabel = null;
+    Map<String, Variable> expects = new HashMap<String, Variable>();
+    Map<String, Variable> exports = new HashMap<String, Variable>();
 
     public EvalVisitor(ParseTree tree) {
-        this("nlg", tree);
+        this("nlg", tree, new Stack<VisitorContext>());
     }
 
-    public EvalVisitor(String label, ParseTree tree) {
+    public EvalVisitor(String label, ParseTree tree, Stack<VisitorContext> stacktrace) {
         this.focusedLabel = new Label(label);
         this.tree = tree;
+        this.stacktrace = stacktrace;
+        try {
+            VisitorContext pastVisitor = stacktrace.peek();
+            Map<String, Variable> pastExports = pastVisitor.visitor().exports();
+            for (Variable variable : pastExports.values()) {
+                // Add the variable to the focused label to be added to the current label after he is visited
+                this.focusedLabel.addVariable(variable);
+                this.expects.put(variable.name(), variable);
+            }
+        } catch (EmptyStackException e) {
+            // Do nothing
+        }
+    }
+
+    public Label currentLabel() {
+        return this.currentLabel;
+    }
+
+    public Map<String, Variable> exports() {
+        return this.exports;
     }
 
     public Object visitLabel(NelangParser.LabelContext ctx) {
         Label label = (Label) visit(ctx.initLabel());
-        if (!label.equals(this.focusedLabel)) {
+        if (!label.name().equals(this.focusedLabel.name())) {
             return null;
         }
         return visitChildren(ctx);
@@ -38,6 +64,11 @@ public class EvalVisitor extends NelangBaseVisitor {
         String id = ctx.IDENTIFIER().getText();
         Label label = new Label(id);
         this.currentLabel = label;
+        // Add each variable from the focused label to the current label
+        // It's run only when the focused label is the current label, defined on visitLabel method
+        for (Variable variable : this.focusedLabel.variables().values()) {
+            this.currentLabel.addVariable(variable);
+        }
         return label;
     }
 
@@ -48,6 +79,35 @@ public class EvalVisitor extends NelangBaseVisitor {
             this.currentLabel.addVariable(variable);
         }
         return this.currentLabel.variables();
+    }
+
+    public Map<String, Variable> visitExpect(NelangParser.ExpectContext ctx) throws NelangException {
+        List<TerminalNode> ids = ctx.IDENTIFIER();
+        Map<String, Variable> variables = new HashMap<String, Variable>();
+        for (String id : ids.stream().map(TerminalNode::getText).toList()) {
+            // The expected variable has added to the current label on the constructor
+            if (!this.expects.containsKey(id)) {
+                this.reportException("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+                        + " Variable " + id + " not exported in the label " + this.currentLabel.name(), ctx);
+            }
+            variables.put(id, this.expects.get(id));
+        }
+        return variables;
+    }
+
+    public Map<String, Variable> visitExport(NelangParser.ExportContext ctx)  {
+        List<TerminalNode> ids = ctx.IDENTIFIER();
+        Map<String, Variable> variables = new HashMap<String, Variable>();
+        for (String id : ids.stream().map(TerminalNode::getText).toList()) {
+            if (!this.currentLabel.variables().containsKey(id)) {
+                this.reportException("Line " + ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine()
+                        + " Variable " + id + " not declared in the label " + this.currentLabel.name(), ctx);
+            }
+            Variable variable = (Variable) this.currentLabel.variables().get(id);
+            variables.put(id, variable);
+            this.exports.put(id, variable); // Added to be exported to the next label
+        }
+        return variables;
     }
 
     public Variable visitAssignment(NelangParser.AssignmentContext ctx) {
@@ -115,7 +175,8 @@ public class EvalVisitor extends NelangBaseVisitor {
 
     public Object visitGoto(NelangParser.GotoContext ctx) {
         String id = ctx.IDENTIFIER().getText();
-        EvalVisitor visitor = new EvalVisitor(id, this.tree);
+        Stack<VisitorContext> stacktrace = this.pushStacktrace(ctx);
+        EvalVisitor visitor = new EvalVisitor(id, this.tree, stacktrace);
         visitor.visit(this.tree);
         return null;
     }
@@ -160,5 +221,17 @@ public class EvalVisitor extends NelangBaseVisitor {
 
     public Integer visitIntegerAsValue(NelangParser.IntegerAsValueContext ctx) {
         return Integer.valueOf(ctx.INTEGER().getText());
+    }
+
+    @SuppressWarnings("unchecked")
+    Stack<VisitorContext> pushStacktrace(ParserRuleContext context) {
+        Stack<VisitorContext> stacktrace = (Stack<VisitorContext>) this.stacktrace.clone();
+        stacktrace.push(new VisitorContext(this, context));
+        return stacktrace;
+    }
+
+    void reportException(String message, ParserRuleContext context) throws NelangException {
+        Stack<VisitorContext> stacktrace = pushStacktrace(context);
+        throw new NelangException(message, stacktrace);
     }
 }

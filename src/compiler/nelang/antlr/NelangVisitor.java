@@ -53,6 +53,18 @@ public interface NelangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaration(NelangParser.DeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link NelangParser#expect}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpect(NelangParser.ExpectContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link NelangParser#export}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExport(NelangParser.ExportContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link NelangParser#assignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
