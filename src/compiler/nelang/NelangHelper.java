@@ -13,18 +13,29 @@ public class NelangHelper {
         NelangLexer lexer = new NelangLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         NelangParser parser = new NelangParser(tokens);
-        parser.addParseListener(new CheckSemantic());
         return parser;
     }
 
     public static ParseTree getParseTree(NelangParser parser) throws Exception {
+        CheckSemantic checkSemantic = new CheckSemantic();
+        parser.addParseListener(checkSemantic);
         ParseTree tree = parser.nelang();
+        boolean hasErrors = checkSemantic.errorsCount() > 0 || parser.getNumberOfSyntaxErrors() > 0;
+        if (hasErrors) {
+            throw new Exception("Syntax error. Check the output for more details.");
+        }
         return tree;
     }
 
     public static ParseTree getParseTree(InputStream is) throws Exception {
         NelangParser parser = getParser(is);
+        CheckSemantic checkSemantic = new CheckSemantic();
+        parser.addParseListener(checkSemantic);
         ParseTree tree = parser.nelang();
+        boolean hasErrors = checkSemantic.errorsCount() > 0 || parser.getNumberOfSyntaxErrors() > 0;
+        if (hasErrors) {
+            throw new Exception("Syntax error. Check the output for more details.");
+        }
         return tree;
     }
 }

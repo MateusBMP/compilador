@@ -70,7 +70,7 @@ public class App {
       ParseTree tree = NelangHelper.getParseTree(parser);
       System.out.println(tree.toStringTree(parser));
     } catch (Exception e) {
-      System.out.println("Error: " + e.getMessage());
+      System.out.println(e.getMessage());
     }
   }
 
@@ -92,7 +92,7 @@ public class App {
         System.out.println("  #" + stacktrace.size() + " : Label " + visitorContext.visitor().currentLabel().name()  + " Line " + visitorContext.context().getStart().getLine() + ":" + visitorContext.context().getStart().getCharPositionInLine());
       }
     } catch (Exception e) {
-      System.out.println("Error: " + e.getMessage());
+      System.out.println(e.getMessage());
     } 
   }
 
