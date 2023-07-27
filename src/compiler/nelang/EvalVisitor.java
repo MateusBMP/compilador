@@ -207,6 +207,15 @@ public class EvalVisitor extends NelangBaseVisitor {
         return null;
     }
 
+    public Object visitWhile(NelangParser.WhileContext ctx) {
+        boolean result = (boolean) visit(ctx.compare());
+        while (result) {
+            visit(ctx.goto_());
+            result = (boolean) visit(ctx.compare());
+        }
+        return null;
+    }
+
     public Boolean visitCompare(NelangParser.CompareContext ctx) {
         Integer firstValue = (Integer) visit(ctx.valuePosition(0));
         Integer secondValue = (Integer) visit(ctx.valuePosition(1));

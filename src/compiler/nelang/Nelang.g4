@@ -21,7 +21,8 @@ statement: SPACE* declaration endLine+
          | SPACE* divide endLine+
          | SPACE* print endLine+ 
          | SPACE* goto endLine+ 
-         | SPACE* if endLine+ ;
+         | SPACE* if endLine+ 
+         | SPACE* while endLine+ ;
 
 endLine: SPACE* NEWLINE;
 
@@ -37,6 +38,7 @@ print: PRINT (SPACE+ IDENTIFIER)* ;
 goto: GOTO SPACE+ IDENTIFIER ;
 if: IF SPACE+ compare SPACE+ goto (SPACE+ else)? ;
 else: ELSE SPACE+ goto ;
+while: WHILE SPACE+ compare SPACE+ goto ;
 
 compare: valuePosition SPACE+ OPERATOR SPACE+ valuePosition ;
 valuePosition: identifierAsValue | integerAsValue ;
@@ -63,6 +65,7 @@ MINUS: 'MINUS' ;
 MULTIPLY: 'MULTIPLY' ;
 PRINT: 'PRINT' ;
 SUM: 'SUM' ;
+WHILE: 'WHILE' ;
 
 OPERATOR: 'EQ' | 'NE' | 'LT' | 'LE' | 'GT' | 'GE' ;
 INTEGER: ('+' | '-')? [0-9]+ ;
